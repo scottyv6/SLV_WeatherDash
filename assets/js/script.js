@@ -43,13 +43,90 @@ function removeAllChildNodes(parent) {
 
 //This function creates the button of a city that has been searched
 function createCityBtn (city) {
-    const li = document.createElement('li')
+    //const li = document.createElement('li')
     const cityButton = document.createElement('button')
     cityButton.setAttribute('id', city);
+    cityButton.setAttribute('class', 'cityBtn');
     cityButton.textContent = city;
-    li.appendChild(cityButton);
-    cityBtnContainer.appendChild(li);
+    //li.appendChild(cityButton);
+    cityBtnContainer.appendChild(cityButton);
+
+    cityButton.addEventListener('click', function() {
+        console.log('check' + city);
+        //
+        const userInput = city;
+    
+        // clear display of previous items if they exist.
+        removeAllChildNodes (todayContainer);
+        removeAllChildNodes (forecastContainer);
+    
+        // get weather provides the data which is then extracted and displayed on the page
+        getWeather(userInput)
+            .then((response) => {
+           
+            const cityName = response.currentWeather.list[0].name;
+            const dateNow = moment.unix(response.oneCallWeather.current.dt).format("DD/MM/YYYY");
+            const temp = response.oneCallWeather.current.temp;
+            const wind = response.oneCallWeather.current.wind_speed;
+            const humidity = response.oneCallWeather.current.humidity;
+            const uvi = response.oneCallWeather.current.uvi;
+
+            const card = createCurrentCard(
+                cityName,
+                dateNow,
+                temp,
+                wind,
+                humidity,
+                uvi
+            );
+
+
+
+            todayContainer.appendChild(card);
+            // response.oneCallWeather.daily contains an array of weather forecast data for 8 day. 
+            // starting slice at 1 to start forecast at the next day. 
+            const forecasts = response.oneCallWeather.daily.slice(1, 6);
+            // loops through the daiky array and outputs 5-day forcast to the page.
+            for (let i = 0; i < forecasts.length; i++){
+                const forecast = forecasts[i];
+                const card = createForecastCard(
+                    moment.unix(forecast.dt).format("DD/MM/YYYY"),
+                    forecast.weather[0].icon,
+                    forecast.weather[0].description,
+                    forecast.temp.max,
+                    forecast.temp.min,
+                    forecast.wind_speed,
+                    forecast.humidity
+                )
+                forecastContainer.appendChild(card);
+            }
+        })
+    })
+    // add to local storage
+    let citiesArray = getCities();
+    console.log (Array.isArray(citiesArray));
+    console.log(citiesArray.includes(city))
+    if (!citiesArray.includes(city)) {
+        citiesArray.push(city);
+    }
+    localStorage.setItem("cities", JSON.stringify(citiesArray));
+    
 }
+
+function getCities() {
+    return JSON.parse(localStorage.getItem("cities")) || [];
+}
+
+// create function to load local storage
+function loadButtons() {
+    let citiesArray = getCities();
+    if (citiesArray) {
+        for (let i = 0; i < citiesArray.length; i++) {
+            createCityBtn(citiesArray[i]);
+        }
+    }
+}
+
 
 //When a city is selected 
 cityInputEl.addEventListener("change", function(event){
@@ -199,3 +276,4 @@ function getUVClass(uvi) {
     }
     return uvclass;
 }
+loadButtons();
