@@ -5,6 +5,11 @@
     --searchbtnhover: #055eb8;
     --darkbg: #33475a;
     --greybg: #b7b7b7;
+    --low: #83c88b;
+    --moderate: #ffdc01;
+    --high: #f89c1c;
+    --veryhigh: #ee1d23;
+    --extreme: #d83484;
 }
 
 * {
@@ -19,6 +24,12 @@ body {
 
 }
 
+nav {
+    color: white;
+    background-image: linear-gradient(to right, var(--headinglight), var(--headingdark));
+    text-align: center;
+}
+
 .btn {
     font-size: 1.3rem;
     text-decoration:none;
@@ -31,8 +42,8 @@ body {
     border: none;
     outline: none;
     background-color: var(--searchbtncolour);
-    box-shadow: 3px 3px var(--dark);
-    transform: translate(-1px, -1px);
+    /* box-shadow: 3px 3px var(--dark); */
+    /* transform: translate(-1px, -1px); */
 }
 
 .btn:hover {
@@ -42,12 +53,38 @@ body {
     box-shadow: 2px 2px darkgrey;
   }
 
-.card {
+.forecast-card {
+    color: white;
+    background-color: var(--darkbg);
+}
+
+
+.low {
+    background-color: var(--low);
+}
+
+.moderate {
+    background-color: var(--moderate);
+}
+
+.high {
+    background-color: var(--high);
+}
+
+.veryhigh {
+    background-color: var(--veryhigh);
+}
+
+.extreme {
+    background-color: var(--extreme);
+}
+
+/* .card {
     color: black;
     margin: 0 0 20px 0;
     border: 3px solid black;
     border-radius: .3rem;
-}
+} */
 
 .card-header {
     padding: 2.5%;
